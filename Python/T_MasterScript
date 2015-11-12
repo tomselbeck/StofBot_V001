@@ -1,0 +1,42 @@
+import T_SerialEncoder
+import serial 
+import time
+
+
+## Set up Arduino Connection 
+
+print ("Setting up Arduino serial connection")
+arduino = serial.Serial('COM3', 9600, timeout=.1)
+time.sleep(1) #give the connection a second to settle\
+print ("Connection has been made, ready for data")
+pass
+
+
+
+
+
+
+SS=120
+
+
+result = T_SerialEncoder.Encoder("SS",SS)
+
+print result[0]
+
+
+
+
+## Transmit data to aduino 
+
+for bytes in result:
+	arduino.write(str(bytes))
+	print bytes
+	time.sleep(0.1)
+	pass
+
+
+## Wait for feedback	
+
+
+
+
