@@ -1,42 +1,76 @@
-import T_SerialEncoder
+from T_SerialEncoder import *
 import serial 
 import time
 
 
-## Set up Arduino Connection 
 
+##################################################################################################
+# Define Program Functions 
+##################################################################################################
+
+
+##########################
+# Transmit: Sends serial data to the Arduino, input is a string array
+##########################
+
+
+
+
+
+
+def transmit(data):
+
+	for bytes in data:
+		arduino.write(str(bytes))
+		print bytes
+		time.sleep(1)
+		pass
+	pass
+
+##########################
+# Receive: Checks for incomming serial data, returns the received 8 byte packet
+##########################
+
+
+def receive():
+
+	## Check if there is any serial data incommin
+	data = arduino.readline
+	if data != "":
+		print data
+		if data == "O":
+			inMessage = [8]
+			for byte in inMessage:
+				print byte
+			 	pass 
+			pass
+ 	pass
+pass
+
+
+
+
+#######################################################################################################################
+# MAIN PROGRAM START #
+#######################################################################################################################
+
+
+## Connect to arduino 
 print ("Setting up Arduino serial connection")
 arduino = serial.Serial('COM3', 9600, timeout=.1)
 time.sleep(1) #give the connection a second to settle\
 print ("Connection has been made, ready for data")
 pass
 
-
-
-
-
-
-SS=120
-
-
-result = T_SerialEncoder.Encoder("SS",SS)
-
-print result[0]
-
-
-
-
-## Transmit data to aduino 
-
-for bytes in result:
-	arduino.write(str(bytes))
-	print bytes
-	time.sleep(0.1)
+tv01 = 120
+transmit(Encoder("TV01",tv01))	
+## Main looping program ###
+loop = True
+while (loop == True):
+	
+	loop = False
 	pass
 
 
-## Wait for feedback	
-
-
-
-
+print "End of program"
+## Last line
