@@ -2,10 +2,10 @@
 
 # Serial Encoder: Takes a variable, encodes it into a serial communication format, to be decoded by the Arduino. 
 
-def Encoder(VarID,VarValue):
+def Encode(VarID,VarValue):
 
 	## Create output array
-	print ("Running Serial Encoder")
+	#print ("Running Serial Encoder")
 	StrVarValue = map(int, str(VarValue))
 	#print StrVarValue
 	## Add a zero the the front of the list to make shure the value string stays 4 strings long 
@@ -31,8 +31,8 @@ def Encoder(VarID,VarValue):
 
 	## Create output list  ##
 	Output = ['O',VarID[0],VarID[1],StrVarValue[0],StrVarValue[1],StrVarValue[2],StrVarValue[3],'C']
-	print Output
-	print ("Done")
+	#print Output
+	#print ("Done")
 	return Output
 	pass
 

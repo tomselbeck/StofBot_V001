@@ -1,4 +1,5 @@
 from T_SerialEncoder import *
+import T_ServoControl
 import serial 
 import time
 
@@ -23,7 +24,7 @@ def transmit(data):
 	for bytes in data:
 		arduino.write(str(bytes))
 		print bytes
-		time.sleep(1)
+		#time.sleep(0.01)
 		pass
 	pass
 
@@ -60,15 +61,51 @@ print ("Setting up Arduino serial connection")
 arduino = serial.Serial('COM3', 9600, timeout=.1)
 time.sleep(1) #give the connection a second to settle\
 print ("Connection has been made, ready for data")
-pass
 
-tv01 = 120
-transmit(Encoder("TV01",tv01))	
+
+
+
+
+
+
+
+
+
 ## Main looping program ###
 loop = True
+loopcounter = 0
 while (loop == True):
+
 	
-	loop = False
+	## Get sensor servo Heading 
+	SV01=T_ServoControl.angle()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	################ Transmit data to arduino
+
+	## Transmit sensor servo position 
+	transmit(Encode("SV01",SV01))
+
+
+
+
+
+	if loopcounter == 100:
+		loop = False
+		pass
+	loopcounter = loopcounter+1
 	pass
 
 
