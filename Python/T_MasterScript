@@ -1,7 +1,9 @@
-from T_SerialEncoder import *
+
 import T_ServoControl
+from Arduino import Arduino
 import serial 
 import time
+
 
 
 
@@ -10,23 +12,13 @@ import time
 ##################################################################################################
 
 
-##########################
-# Transmit: Sends serial data to the Arduino, input is a string array
-##########################
 
 
 
 
 
 
-def transmit(data):
 
-	for bytes in data:
-		arduino.write(str(bytes))
-		print bytes
-		#time.sleep(0.01)
-		pass
-	pass
 
 ##########################
 # Receive: Checks for incomming serial data, returns the received 8 byte packet
@@ -38,13 +30,9 @@ def receive():
 	## Check if there is any serial data incommin
 	data = arduino.readline
 	if data != "":
+		print ""
 		print data
-		if data == "O":
-			inMessage = [8]
-			for byte in inMessage:
-				print byte
-			 	pass 
-			pass
+		print ""
  	pass
 pass
 
@@ -56,11 +44,19 @@ pass
 #######################################################################################################################
 
 
-## Connect to arduino 
-print ("Setting up Arduino serial connection")
-arduino = serial.Serial('COM3', 9600, timeout=.1)
-time.sleep(1) #give the connection a second to settle\
-print ("Connection has been made, ready for data")
+############################################### 
+# Set up arduino serial connection
+###############################################
+board = Arduino('9600', port="")
+time.sleep(.1)
+############################################### 
+# Set up arduino pins
+###############################################
+debugLed = 12
+servo01 = 9
+board.pinMode(debugLed, "OUTPUT")
+board.pinMode(13, "OUTPUT")
+board.Servos.attach(servo01)
 
 
 
@@ -69,44 +65,19 @@ print ("Connection has been made, ready for data")
 
 
 
+### Main Program loop
 
-
-## Main looping program ###
-loop = True
-loopcounter = 0
-while (loop == True):
-
-	
-	## Get sensor servo Heading 
-	SV01=T_ServoControl.angle()
+for x in xrange(1,100):
 
 
 
+	board.digitalWrite(debugLed, "HIGH")
+	board.Servos.attach(9)
+	board.Servos.write(servo01, T_ServoControl.angle()) 
 
-
-
-
-
-
-
-
-
-
-
-	################ Transmit data to arduino
-
-	## Transmit sensor servo position 
-	transmit(Encode("SV01",SV01))
-
-
-
-
-
-	if loopcounter == 100:
-		loop = False
-		pass
-	loopcounter = loopcounter+1
 	pass
+
+
 
 
 print "End of program"

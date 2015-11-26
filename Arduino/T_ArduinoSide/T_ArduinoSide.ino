@@ -1,77 +1,118 @@
+unsigned long serialdata;
+int inbyte;
+int digitalState;
+int pinNumber;
+int analogRate;
+int sensorVal;
 
-char inMessage [8];
-int packetSwitch = 0;
-int packetCount = 0;
-int receivePin = 13;
-
-void setup() {
-  // initialize serial communication at 9600 bits per second:
-
-    Serial.begin(9600);
-    pinMode(receivePin, OUTPUT);
-
-
-
-
-    Serial.print ("Arduino is ready to talk");
-    int PacketIn = 0;
+void setup()
+{
+  Serial.begin(9600);
 }
 
-
-void loop() {
-
-// Check incomming Serial data // 
-serialIn();
-
-
-
-}
-
-
-
-int serialIn(){
-
-// Check for serial input // 
-  if(Serial.available() > 0) {
-        char data = Serial.read();
-        //Serial.println("");
-        //Serial.print ("Received a Byte:");
-
-        // Convert data to Asci caracter 
-        
-        char dataAsci = data;
-        //Serial.print (dataAsci);
-
-        // Check for opening byte 
-
-        if (dataAsci ='O'){
-          packetSwitch = 1;
-          char Inmessage [8];
-         // Serial.println("");
-          //Serial.print("Started receiving packet");
-          digitalWrite (receivePin, HIGH); 
+void loop()
+{
+  getSerial();
+  switch(serialdata)
+  {
+  case 1:
+    {
+      //analog digital write
+      getSerial();
+      switch (serialdata)
+      {
+      case 1:
+        {
+          //analog write
+          getSerial();
+          pinNumber = serialdata;
+          getSerial();
+          analogRate = serialdata;
+          pinMode(pinNumber, OUTPUT);
+          analogWrite(pinNumber, analogRate);
+          pinNumber = 0;
+          break;
         }
-         // Check for closing byte or if the packet is too long, then print the fineshed message
-        if (dataAsci = 'C' || packetCount>8){
-          
-          packetSwitch = 0;
-          packetCount = 0;
-         // Serial.println("Packet received");
-          //digitalWrite (receivePin, LOW);
-         // Serial.print (inMessage);
-          // Print finished packet //           
+      case 2:
+        {
+          //digital write
+          getSerial();
+          pinNumber = serialdata;
+          getSerial();
+          digitalState = serialdata;
+          pinMode(pinNumber, OUTPUT);
+          if (digitalState == 1)
+          {
+            digitalWrite(pinNumber, LOW);
+          }
+          if (digitalState == 2)
+          {
+            digitalWrite(pinNumber, HIGH);
+          }
+          pinNumber = 0;
+          break;
+         
         }
-    
-
-       // If the packet is being received, start logging bytes
-
-       if (packetSwitch == 1){
-          inMessage[packetCount] = dataAsci;
-         // Serial.print (" PacketCount:");
-         // Serial.print(packetCount);          
-          packetCount++;         
-       }    
+     }
+     break; 
+    }
+    case 2:
+    {
+      getSerial();
+      switch (serialdata)
+      {
+      case 1:
+        {
+          //analog read
+          getSerial();
+          pinNumber = serialdata;
+          pinMode(pinNumber, INPUT);
+          sensorVal = analogRead(pinNumber);
+          Serial.println(sensorVal);
+          sensorVal = 0;
+          pinNumber = 0;
+          break;
+        } 
+      case 2:
+        {
+          //digital read
+          getSerial();
+          pinNumber = serialdata;
+          pinMode(pinNumber, INPUT);
+          sensorVal = digitalRead(pinNumber);
+          Serial.println(sensorVal);
+          sensorVal = 0;
+          pinNumber = 0;
+          break;
+        }
+      }
+      break;
+    }
   }
-
 }
 
+int getSerial()
+{
+  serialdata = 0;
+  while (inbyte != 47)
+  {
+    inbyte = Serial.read();
+    if (inbyte != 47){
+    
+    }
+
+      
+
+    if (inbyte > 0 && inbyte != 47)
+    {
+      
+      inbyte = inbyte - 48;
+      serialdata = serialdata * 10 + inbyte - '0';
+      Serial.println(inbyte);
+    }
+  }
+  inbyte = 0;
+  Serial.println ("FUCKING FINALY");
+  
+  return serialdata;
+}
